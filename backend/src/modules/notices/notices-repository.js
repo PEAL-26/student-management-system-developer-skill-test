@@ -1,5 +1,5 @@
-const { db } = require("../../config");
-const { processDBRequest } = require("../../utils");
+const { db } = require('../../config');
+const { processDBRequest } = require('../../utils');
 
 const getNotices = async (userId) => {
   const query = `SELECT * FROM get_notices($1)`;
@@ -65,7 +65,7 @@ const addNewNotice = async (payload) => {
     recipientType,
     recipientRole,
     firstField: recipientFirstField,
-    authorId,
+    authorId
   } = payload;
   const query = `
         INSERT INTO notices
@@ -80,7 +80,7 @@ const addNewNotice = async (payload) => {
     recipientRole,
     recipientFirstField,
     now,
-    authorId,
+    authorId
   ];
   const { rowCount } = await processDBRequest({ query, queryParams });
   return rowCount;
@@ -88,15 +88,7 @@ const addNewNotice = async (payload) => {
 
 const updateNoticeById = async (payload) => {
   const now = new Date();
-  const {
-    id,
-    title,
-    status,
-    description,
-    recipientType,
-    recipientRole,
-    firstField,
-  } = payload;
+  const { id, title, status, description, recipientType, recipientRole, firstField } = payload;
   const query = `
         UPDATE notices
         SET
@@ -117,7 +109,7 @@ const updateNoticeById = async (payload) => {
     recipientRole,
     firstField,
     now,
-    id,
+    id
   ];
   const { rowCount } = await processDBRequest({ query, queryParams });
   return rowCount;
@@ -125,40 +117,31 @@ const updateNoticeById = async (payload) => {
 
 const getNoticeRecipientList = async () => {
   try {
-    const noticeRecipientTypesQuery = "SELECT * FROM notice_recipient_types";
-    const { rows: noticeRecipientTypes } = await db.query(
-      noticeRecipientTypesQuery
-    );
+    const noticeRecipientTypesQuery = 'SELECT * FROM notice_recipient_types';
+    const { rows: noticeRecipientTypes } = await db.query(noticeRecipientTypesQuery);
 
     if (noticeRecipientTypes.length <= 0) {
       return [];
     }
 
-    const recipientPromises = noticeRecipientTypes.map(
-      async (recipientType) => {
-        const {
-          id,
-          role_id,
-          primary_dependent_name,
-          primary_dependent_select,
-        } = recipientType;
+    const recipientPromises = noticeRecipientTypes.map(async (recipientType) => {
+      const { id, role_id, primary_dependent_name, primary_dependent_select } = recipientType;
 
-        const selectRoleQuery = `SELECT name FROM roles WHERE id = $1`;
-        const { rows } = await db.query(selectRoleQuery, [role_id]);
-        const recipient = { id, roleId: role_id, name: rows[0].name };
+      const selectRoleQuery = `SELECT name FROM roles WHERE id = $1`;
+      const { rows } = await db.query(selectRoleQuery, [role_id]);
+      const recipient = { id, roleId: role_id, name: rows[0].name };
 
-        const { rows: dependentRows } = primary_dependent_select
-          ? await db.query(primary_dependent_select)
-          : await Promise.resolve({ rows: [] });
+      const { rows: dependentRows } = primary_dependent_select
+        ? await db.query(primary_dependent_select)
+        : await Promise.resolve({ rows: [] });
 
-        recipient.primaryDependents = {
-          name: primary_dependent_name,
-          list: dependentRows,
-        };
+      recipient.primaryDependents = {
+        name: primary_dependent_name,
+        list: dependentRows
+      };
 
-        return recipient;
-      }
-    );
+      return recipient;
+    });
 
     const result = await Promise.all(recipientPromises);
     return result;
@@ -203,12 +186,7 @@ const updateNoticeRecipient = async (payload) => {
             primary_dependent_select = $2
         WHERE id = $3 and role_id = $4
     `;
-  const queryParams = [
-    primaryDependentName,
-    primaryDependentSelect,
-    id,
-    roleId,
-  ];
+  const queryParams = [primaryDependentName, primaryDependentSelect, id, roleId];
   const { rowCount } = await processDBRequest({ query, queryParams });
   return rowCount;
 };
@@ -261,5 +239,5 @@ module.exports = {
   updateNoticeRecipient,
   deleteNoticeRecipient,
   getNoticeRecipientById,
-  getAllPendingNotices,
+  getAllPendingNotices
 };

@@ -7,8 +7,8 @@ const {
   verifyPassword,
   generateHashedPassword,
   sendAccountVerificationEmail,
-  formatMyPermission,
-} = require("../../utils");
+  formatMyPermission
+} = require('../../utils');
 const {
   findUserByUsername,
   invalidateRefreshToken,
@@ -20,39 +20,30 @@ const {
   isEmailVerified,
   verifyAccountEmail,
   doesEmailExist,
-  setupUserPassword,
-} = require("./auth-repository");
-const { v4: uuidV4 } = require("uuid");
-const { env, db } = require("../../config");
-const { insertRefreshToken, findUserById } = require("../../shared/repository");
+  setupUserPassword
+} = require('./auth-repository');
+const { v4: uuidV4 } = require('uuid');
+const { env, db } = require('../../config');
+const { insertRefreshToken, findUserById } = require('../../shared/repository');
 
-const PWD_SETUP_EMAIL_SEND_SUCCESS =
-  "Password setup link emailed successfully.";
-const USER_DOES_NOT_EXIST = "User does not exist";
-const EMAIL_NOT_VERIFIED =
-  "Email not verified yet. Please verify your email first.";
-const USER_ALREADY_ACTIVE = "User already in active status. Please login.";
-const UNABLE_TO_VERIFY_EMAIL = "Unable to verify email";
+const PWD_SETUP_EMAIL_SEND_SUCCESS = 'Password setup link emailed successfully.';
+const USER_DOES_NOT_EXIST = 'User does not exist';
+const EMAIL_NOT_VERIFIED = 'Email not verified yet. Please verify your email first.';
+const USER_ALREADY_ACTIVE = 'User already in active status. Please login.';
+const UNABLE_TO_VERIFY_EMAIL = 'Unable to verify email';
 const login = async (username, passwordFromUser) => {
   const client = await db.connect();
   try {
-    await client.query("BEGIN");
+    await client.query('BEGIN');
 
     const user = await findUserByUsername(username, client);
     if (!user) {
-      throw new ApiError(400, "Invalid credential");
+      throw new ApiError(400, 'Invalid credential');
     }
 
-    const {
-      id: userId,
-      role_id,
-      name,
-      email,
-      password: passwordFromDB,
-      is_active,
-    } = user;
+    const { id: userId, role_id, name, email, password: passwordFromDB, is_active } = user;
     if (!is_active) {
-      throw new ApiError(403, "Your account is disabled");
+      throw new ApiError(403, 'Your account is disabled');
     }
 
     await verifyPassword(passwordFromDB, passwordFromUser);
@@ -78,7 +69,7 @@ const login = async (username, passwordFromUser) => {
     const permissions = await getMenusByRoleId(role_id, client);
     const { hierarchialMenus, apis, uis } = formatMyPermission(permissions);
 
-    await client.query("COMMIT");
+    await client.query('COMMIT');
 
     const accountBasic = {
       id: userId,
@@ -87,12 +78,12 @@ const login = async (username, passwordFromUser) => {
       role: roleName,
       menus: hierarchialMenus,
       uis,
-      apis,
+      apis
     };
 
     return { accessToken, refreshToken, csrfToken, accountBasic };
   } catch (error) {
-    await client.query("ROLLBACK");
+    await client.query('ROLLBACK');
     throw error;
   } finally {
     client.release();
@@ -102,32 +93,29 @@ const login = async (username, passwordFromUser) => {
 const logout = async (refreshToken) => {
   const affectedRow = await invalidateRefreshToken(refreshToken);
   if (affectedRow <= 0) {
-    throw new ApiError(500, "Unable to logout");
+    throw new ApiError(500, 'Unable to logout');
   }
-  return { message: "Logged out successfully" };
+  return { message: 'Logged out successfully' };
 };
 
 const getNewAccessAndCsrfToken = async (refreshToken) => {
   const client = await db.connect();
   try {
-    await client.query("BEGIN");
+    await client.query('BEGIN');
 
-    const decodedToken = verifyToken(
-      refreshToken,
-      env.JWT_REFRESH_TOKEN_SECRET
-    );
+    const decodedToken = verifyToken(refreshToken, env.JWT_REFRESH_TOKEN_SECRET);
     if (!decodedToken || !decodedToken.id) {
-      throw new ApiError(401, "Invalid refresh token");
+      throw new ApiError(401, 'Invalid refresh token');
     }
 
     const user = await findUserByRefreshToken(refreshToken);
     if (!user) {
-      throw new ApiError(401, "Refresh token does not exist");
+      throw new ApiError(401, 'Refresh token does not exist');
     }
 
     const { id: userId, role_id, is_active } = user;
     if (!is_active) {
-      throw new ApiError(401, "Your account is disabled");
+      throw new ApiError(401, 'Your account is disabled');
     }
 
     const roleName = await getRoleNameByRoleId(role_id, client);
@@ -139,15 +127,15 @@ const getNewAccessAndCsrfToken = async (refreshToken) => {
       env.JWT_ACCESS_TOKEN_TIME_IN_MS
     );
 
-    await client.query("COMMIT");
+    await client.query('COMMIT');
 
     return {
       accessToken,
       csrfToken,
-      message: "Refresh-token and csrf-token generated successfully",
+      message: 'Refresh-token and csrf-token generated successfully'
     };
   } catch (error) {
-    await client.query("ROLLBACK");
+    await client.query('ROLLBACK');
     throw error;
   } finally {
     client.release();
@@ -156,13 +144,13 @@ const getNewAccessAndCsrfToken = async (refreshToken) => {
 
 const processAccountEmailVerify = async (id) => {
   const EMAIL_VERIFIED_AND_EMAIL_SEND_SUCCESS =
-    "Email verified successfully. Please setup password using link provided in the email.";
+    'Email verified successfully. Please setup password using link provided in the email.';
   const EMAIL_VERIFIED_BUT_EMAIL_SEND_FAIL =
-    "Email verified successfully but fail to send password setup email. Please setup password using link provided in the email.";
+    'Email verified successfully but fail to send password setup email. Please setup password using link provided in the email.';
   try {
     const isEmailAlreadyVerified = await isEmailVerified(id);
     if (isEmailAlreadyVerified) {
-      throw new ApiError(400, "Email already verified");
+      throw new ApiError(400, 'Email already verified');
     }
 
     const user = await verifyAccountEmail(id);
@@ -186,22 +174,21 @@ const processPasswordSetup = async (payload) => {
 
   const result = await doesEmailExist(userId, userEmail);
   if (!result || result?.email !== userEmail) {
-    throw new ApiError(404, "Bad request");
+    throw new ApiError(404, 'Bad request');
   }
 
   const hashedPassword = await generateHashedPassword(password);
   const affectedRow = await setupUserPassword({
     userId,
     userEmail,
-    password: hashedPassword,
+    password: hashedPassword
   });
   if (affectedRow <= 0) {
-    throw new ApiError(500, "Unable to setup password");
+    throw new ApiError(500, 'Unable to setup password');
   }
 
   return {
-    message:
-      "Password setup successful. Please login now using your email and password.",
+    message: 'Password setup successful. Please login now using your email and password.'
   };
 };
 
@@ -220,20 +207,20 @@ const processResendEmailVerification = async (userId) => {
     if (is_email_verified) {
       throw new ApiError(
         400,
-        "Email already verified. Please setup your account password using the link sent in the email."
+        'Email already verified. Please setup your account password using the link sent in the email.'
       );
     }
 
     await sendAccountVerificationEmail({ userId, userEmail: email });
     return {
       message:
-        "Verification email sent successfully. Please setup password using link provided in the email.",
+        'Verification email sent successfully. Please setup password using link provided in the email.'
     };
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;
     } else {
-      throw new ApiError(500, "Unable to send verification email");
+      throw new ApiError(500, 'Unable to send verification email');
     }
   }
 };
@@ -260,7 +247,7 @@ const processResendPwdSetupLink = async (userId) => {
     if (error instanceof ApiError) {
       throw error;
     } else {
-      throw new ApiError(500, "Unable to send password setup email");
+      throw new ApiError(500, 'Unable to send password setup email');
     }
   }
 };
@@ -283,7 +270,7 @@ const processPwdReset = async (userId) => {
     if (error instanceof ApiError) {
       throw error;
     } else {
-      throw new ApiError(500, "Unable to reset password");
+      throw new ApiError(500, 'Unable to reset password');
     }
   }
 };
@@ -296,5 +283,5 @@ module.exports = {
   processPasswordSetup,
   processResendEmailVerification,
   processResendPwdSetupLink,
-  processPwdReset,
+  processPwdReset
 };

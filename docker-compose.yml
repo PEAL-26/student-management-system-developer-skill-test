@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  frontend:   
+    restart: unless-stopped
+    container_name: school_mgmt_frontend
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: production
+    image: school_mgmt/frontend:1.0.0
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/home/node/frontend
+    networks:
+      - school_mgmt_network
+    environment:
+      NODE_ENV: production
+      VITE_API_URL: http://school_mgmt_backend:5007
+      VITE_APP_NAME: Student Management System
+      VITE_APP_VERSION: 1.0.0
+  backend:
+    restart: unless-stopped
+    container_name: school_mgmt_backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: production
+    image: school_mgmt/backend:1.0.0
+    ports:
+      - "5007:5007"
+    volumes:
+      - .:/home/node/backend
+    networks:
+      - school_mgmt_network
+    environment:
+      NODE_ENV: production
+      PORT: 5007
+      DATABASE_URL: postgresql://postgres:8s8rB8758TYxCqEBQGcTR2V7Kdw78SD7@school_mgmt_postgres:5432/school_mgmt_db
+      JWT_ACCESS_TOKEN_SECRET: 12345
+      JWT_REFRESH_TOKEN_SECRET: 12345678
+      CSRF_TOKEN_SECRET: my_csrf_secret
+      JWT_ACCESS_TOKEN_TIME_IN_MS: 9000000
+      JWT_REFRESH_TOKEN_TIME_IN_MS: 28800000
+      CSRF_TOKEN_TIME_IN_MS: 95000
+      MAIL_FROM_USER: your-desired-name@domain-name.com
+      EMAIL_VERIFICATION_TOKEN_SECRET: 863yncir8bc2r
+      EMAIL_VERIFICATION_TOKEN_TIME_IN_MS: 1800000
+      PASSWORD_SETUP_TOKEN_TIME_IN_MS: 3000000
+      PASSWORD_SETUP_TOKEN_SECRET: gwdigwidw
+      UI_URL: http://localhost:5173
+      API_URL: http://localhost:5007
+      COOKIE_DOMAIN: localhost
+      RESEND_API_KEY: re_123456789
+  postgres:
+    restart: always
+    container_name: school_mgmt_postgres
+    image: postgres:13.22-alpine3.22
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=school_mgmt_db
+      - POSTGRES_PASSWORD=8s8rB8758TYxCqEBQGcTR2V7Kdw78SD7
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./seed_db:/docker-entrypoint-initdb.d
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - school_mgmt_network
+
+volumes:
+  postgres_data:
+
+networks:
+  school_mgmt_network:
+    name: school_mgmt_network
+    driver: bridge

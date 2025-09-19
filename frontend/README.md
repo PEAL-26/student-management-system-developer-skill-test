@@ -5,10 +5,12 @@ A modern React application built with TypeScript, Material-UI, and Redux Toolkit
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - npm or yarn
 
 ### Installation & Setup
+
 ```bash
 # Install dependencies
 npm install
@@ -27,27 +29,32 @@ npm run format
 ```
 
 ### Demo Credentials
+
 - **Username**: `admin@school-admin.com`
 - **Password**: `3OU4zn3q6Zh9`
 
 ## 🛠️ Technology Stack
 
 ### Core Technologies
+
 - **React 18** - Modern React with hooks and concurrent features
 - **TypeScript** - Type-safe JavaScript for better development experience
 - **Vite** - Fast build tool and development server
 - **Material-UI (MUI) v6** - Comprehensive React component library
 
 ### State Management
+
 - **Redux Toolkit** - Modern Redux with simplified API
 - **RTK Query** - Powerful data fetching and caching solution
 - **Redux Persist** - State persistence across browser sessions
 
 ### Form Handling & Validation
+
 - **React Hook Form** - Performant forms with minimal re-renders
 - **Zod** - TypeScript-first schema validation
 
 ### Development Tools
+
 - **ESLint** - Code linting and quality checks
 - **Prettier** - Code formatting
 - **Husky** - Git hooks for pre-commit checks
@@ -103,6 +110,7 @@ src/
 ## 🎯 Key Features
 
 ### Authentication & Authorization
+
 - JWT-based authentication with refresh tokens
 - Role-based access control (RBAC)
 - Protected routes and components
@@ -110,6 +118,7 @@ src/
 - Email verification system
 
 ### Dashboard
+
 - User statistics and analytics
 - Recent notices and announcements
 - Birthday and anniversary celebrations
@@ -117,24 +126,28 @@ src/
 - Quick action buttons
 
 ### Student Management
+
 - Student registration and profile management
 - Class and section assignment
 - Academic record tracking
 - Parent/guardian information
 
 ### Notice System
+
 - Create and manage notices
 - Role-based notice distribution
 - Approval workflow for notices
 - Rich text editor for content
 
 ### Leave Management
+
 - Leave policy configuration
 - Leave request submission
 - Approval workflow
 - Leave history and reporting
 
 ### Staff Management
+
 - Employee profile management
 - Department assignment
 - Role and permission management
@@ -143,12 +156,14 @@ src/
 ## 🔧 Development Guidelines
 
 ### Code Standards
+
 - **File Naming**: Use `kebab-case` for files and directories
 - **Component Naming**: Use `PascalCase` for React components
 - **Variable Naming**: Use `camelCase` for variables and functions
 - **Absolute Imports**: Use absolute imports from `src/` directory
 
 ### Component Structure
+
 ```typescript
 // Example component structure
 import React from 'react';
@@ -173,6 +188,7 @@ export const Component: React.FC<ComponentProps> = ({ title, children }) => {
 ```
 
 ### State Management Patterns
+
 ```typescript
 // RTK Query API slice example
 export const apiSlice = createApi({
@@ -182,19 +198,20 @@ export const apiSlice = createApi({
     prepareHeaders: (headers, { getState }) => {
       // Add auth token
       return headers;
-    },
+    }
   }),
   tagTypes: ['Student', 'Notice'],
   endpoints: (builder) => ({
     getStudents: builder.query<Student[], void>({
       query: () => '/students',
-      providesTags: ['Student'],
-    }),
-  }),
+      providesTags: ['Student']
+    })
+  })
 });
 ```
 
 ### Form Handling
+
 ```typescript
 // React Hook Form with Zod validation
 const schema = z.object({
@@ -224,6 +241,7 @@ const MyForm: React.FC = () => {
 ## 🧪 Testing
 
 ### Running Tests
+
 ```bash
 # Run unit tests
 npm run test
@@ -236,6 +254,7 @@ npm run test:coverage
 ```
 
 ### Testing Guidelines
+
 - Write unit tests for utility functions
 - Test React components with React Testing Library
 - Mock API calls in tests
@@ -244,6 +263,7 @@ npm run test:coverage
 ## 🚀 Deployment
 
 ### Build for Production
+
 ```bash
 # Create production build
 npm run build
@@ -253,13 +273,16 @@ npm run preview
 ```
 
 ### Environment Variables
+
 Create a `.env` file in the frontend directory:
+
 ```env
 VITE_API_URL=http://localhost:5007
 VITE_APP_NAME=Student Management System
 ```
 
 ### Docker Deployment
+
 ```dockerfile
 FROM node:18-alpine
 WORKDIR /app
@@ -274,11 +297,13 @@ CMD ["npm", "run", "preview"]
 ## 🐛 Known Issues & Solutions
 
 ### Issue 1: Notice Description Not Saving
+
 **Problem**: When creating a new notice, the description field doesn't get saved.
 **Location**: `/src/domains/notice/pages/add-notice.tsx`
 **Solution**: Check form field binding and API payload structure.
 
 ### Issue 2: Student CRUD Operations
+
 **Problem**: Some CRUD operations for students may be incomplete.
 **Location**: `/src/domains/students/`
 **Solution**: Implement missing API endpoints and form handlers.
@@ -302,16 +327,16 @@ CMD ["npm", "run", "preview"]
 
 ## 📄 Scripts Reference
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Run ESLint |
-| `npm run lint:fix` | Fix ESLint issues |
-| `npm run prettier` | Check code formatting |
-| `npm run prettier:fix` | Fix code formatting |
-| `npm run format` | Run both prettier and lint fixes |
+| Script                 | Description                      |
+| ---------------------- | -------------------------------- |
+| `npm run dev`          | Start development server         |
+| `npm run build`        | Build for production             |
+| `npm run preview`      | Preview production build         |
+| `npm run lint`         | Run ESLint                       |
+| `npm run lint:fix`     | Fix ESLint issues                |
+| `npm run prettier`     | Check code formatting            |
+| `npm run prettier:fix` | Fix code formatting              |
+| `npm run format`       | Run both prettier and lint fixes |
 
 ---
 

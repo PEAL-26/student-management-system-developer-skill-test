@@ -1,7 +1,9 @@
-const { findUserById } = require("./find-user-by-id");
-const { insertRefreshToken } = require("./insert-refresh-token");
+const { findUserById } = require('./find-user-by-id');
+const { findUserByEmail } = require('./find-user-by-email');
+const { insertRefreshToken } = require('./insert-refresh-token');
 
 module.exports = {
-    findUserById,
-    insertRefreshToken,
+  findUserById,
+  findUserByEmail,
+  insertRefreshToken
 };

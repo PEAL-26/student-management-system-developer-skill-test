@@ -1,6 +1,6 @@
-const axios = require("axios");
-const { API_URL, API_HEADERS } = require("../../constants/index");
-const errorHandler = require("../../utils/apiErrorHandler");
+const axios = require('axios');
+const { API_URL, API_HEADERS } = require('../../constants/index');
+const errorHandler = require('../../utils/apiErrorHandler');
 
 let rpcNode = null;
 let initialized = false;
@@ -10,7 +10,7 @@ const initializeHandler = async () => {
   initialized = true;
   try {
     const response = await axios.get(API_URL, {
-      headers: API_HEADERS,
+      headers: API_HEADERS
     });
     rpcNode = response.data;
   } catch (error) {
@@ -30,4 +30,3 @@ const departmentModuleHandler = (moduleFactory) => {
 };
 
 module.exports = { departmentModuleHandler };
-

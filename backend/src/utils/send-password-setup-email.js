@@ -1,7 +1,7 @@
-const { env } = require("../config");
-const { generateToken } = require("./jwt-handle");
-const { sendMail } = require("./send-email");
-const { pwdSetupTemplate } = require("../templates");
+const { env } = require('../config');
+const { generateToken } = require('./jwt-handle');
+const { sendMail } = require('./send-email');
+const { pwdSetupTemplate } = require('../templates');
 
 const sendPasswordSetupEmail = async ({ userId, userEmail }) => {
   const pwdToken = generateToken(
@@ -13,8 +13,8 @@ const sendPasswordSetupEmail = async ({ userId, userEmail }) => {
   const mailOptions = {
     from: env.MAIL_FROM_USER,
     to: userEmail,
-    subject: "Setup account password",
-    html: pwdSetupTemplate(link),
+    subject: 'Setup account password',
+    html: pwdSetupTemplate(link)
   };
   await sendMail(mailOptions);
 };

@@ -5,11 +5,13 @@ A robust Node.js REST API built with Express.js and PostgreSQL for managing scho
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - PostgreSQL (v12 or higher)
 - npm or yarn
 
 ### Installation & Setup
+
 ```bash
 # Install dependencies
 npm install
@@ -28,7 +30,9 @@ npm start
 ```
 
 ### Environment Configuration
+
 Create a `.env` file with the following variables:
+
 ```env
 PORT=5007
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/school_mgmt
@@ -52,6 +56,7 @@ RESEND_API_KEY=your_resend_api_key
 ## 🛠️ Technology Stack
 
 ### Core Technologies
+
 - **Node.js** - JavaScript runtime
 - **Express.js** - Web application framework
 - **PostgreSQL** - Primary database
@@ -59,6 +64,7 @@ RESEND_API_KEY=your_resend_api_key
 - **Argon2** - Password hashing
 
 ### Key Dependencies
+
 - **express-async-handler** - Async error handling
 - **cors** - Cross-origin resource sharing
 - **cookie-parser** - Cookie parsing middleware
@@ -117,11 +123,13 @@ src/
 ## 🔐 Authentication & Security
 
 ### JWT Authentication
+
 - **Access Tokens**: Short-lived tokens (15 minutes) for API access
 - **Refresh Tokens**: Long-lived tokens (8 hours) for token renewal
 - **Token Rotation**: Automatic token refresh mechanism
 
 ### Security Features
+
 - **CSRF Protection**: HMAC-based CSRF tokens
 - **Password Hashing**: Argon2 for secure password storage
 - **Role-Based Access Control**: Granular permissions system
@@ -129,6 +137,7 @@ src/
 - **Secure Cookies**: HttpOnly, Secure, SameSite cookies
 
 ### Authentication Flow
+
 ```
 1. User login → Validate credentials
 2. Generate access + refresh tokens
@@ -141,6 +150,7 @@ src/
 ## 📚 API Documentation
 
 ### Base URL
+
 ```
 http://localhost:5007/api/v1
 ```
@@ -148,7 +158,9 @@ http://localhost:5007/api/v1
 ### Authentication Endpoints
 
 #### POST /auth/login
+
 Login user and get authentication tokens.
+
 ```json
 {
   "email": "admin@school-admin.com",
@@ -157,7 +169,9 @@ Login user and get authentication tokens.
 ```
 
 #### POST /auth/logout
+
 Logout user and invalidate tokens.
+
 ```json
 {
   "message": "Logged out successfully"
@@ -165,7 +179,9 @@ Logout user and invalidate tokens.
 ```
 
 #### GET /auth/refresh
+
 Refresh access token using refresh token.
+
 ```json
 {
   "accessToken": "new_access_token",
@@ -176,7 +192,9 @@ Refresh access token using refresh token.
 ### Student Management Endpoints
 
 #### GET /students
+
 Get all students with pagination and filtering.
+
 ```
 Query Parameters:
 - page: Page number (default: 1)
@@ -187,7 +205,9 @@ Query Parameters:
 ```
 
 #### POST /students
+
 Create a new student.
+
 ```json
 {
   "name": "John Doe",
@@ -202,7 +222,9 @@ Create a new student.
 ```
 
 #### PUT /students/:id
+
 Update student information.
+
 ```json
 {
   "name": "John Smith",
@@ -211,7 +233,9 @@ Update student information.
 ```
 
 #### DELETE /students/:id
+
 Delete a student record.
+
 ```json
 {
   "message": "Student deleted successfully"
@@ -221,7 +245,9 @@ Delete a student record.
 ### Notice Management Endpoints
 
 #### GET /notices
+
 Get all notices with filtering.
+
 ```
 Query Parameters:
 - status: Filter by status (draft, published, archived)
@@ -230,7 +256,9 @@ Query Parameters:
 ```
 
 #### POST /notices
+
 Create a new notice.
+
 ```json
 {
   "title": "Important Announcement",
@@ -241,7 +269,9 @@ Create a new notice.
 ```
 
 #### PUT /notices/:id
+
 Update notice.
+
 ```json
 {
   "title": "Updated Announcement",
@@ -250,15 +280,19 @@ Update notice.
 ```
 
 #### DELETE /notices/:id
+
 Delete a notice.
 
 ### Leave Management Endpoints
 
 #### GET /leave/requests
+
 Get leave requests with filtering.
 
 #### POST /leave/requests
+
 Submit a new leave request.
+
 ```json
 {
   "from_dt": "2024-01-15",
@@ -269,18 +303,23 @@ Submit a new leave request.
 ```
 
 #### PUT /leave/requests/:id/approve
+
 Approve a leave request.
 
 #### PUT /leave/requests/:id/reject
+
 Reject a leave request.
 
 ### Staff Management Endpoints
 
 #### GET /staffs
+
 Get all staff members.
 
 #### POST /staffs
+
 Add new staff member.
+
 ```json
 {
   "name": "Jane Teacher",
@@ -294,6 +333,7 @@ Add new staff member.
 ## 🗄️ Database Schema
 
 ### Key Tables
+
 - **users**: User accounts and basic information
 - **user_profiles**: Extended user profile data
 - **roles**: System roles and permissions
@@ -306,6 +346,7 @@ Add new staff member.
 - **permissions**: Role-permission mappings
 
 ### Relationships
+
 - Users belong to roles
 - Users have profiles
 - Students belong to classes and sections
@@ -316,6 +357,7 @@ Add new staff member.
 ## 🔧 Development Guidelines
 
 ### Code Structure
+
 ```javascript
 // Controller pattern
 const handleGetStudents = asyncHandler(async (req, res) => {
@@ -344,6 +386,7 @@ const findStudents = async ({ offset, limit, search }) => {
 ```
 
 ### Error Handling
+
 ```javascript
 // Custom error classes
 class ApiError extends Error {
@@ -365,6 +408,7 @@ const errorHandler = (err, req, res, next) => {
 ```
 
 ### Validation
+
 ```javascript
 // Zod schema validation
 const createStudentSchema = z.object({
@@ -389,6 +433,7 @@ const validateCreateStudent = (req, res, next) => {
 ## 🧪 Testing
 
 ### Running Tests
+
 ```bash
 # Run all tests
 npm test
@@ -401,6 +446,7 @@ npm run test:coverage
 ```
 
 ### Test Structure
+
 ```javascript
 // Example test
 describe('Student Controller', () => {
@@ -410,7 +456,7 @@ describe('Student Controller', () => {
         .get('/api/v1/students')
         .set('Authorization', `Bearer ${token}`)
         .expect(200);
-      
+
       expect(response.body.data).toBeInstanceOf(Array);
       expect(response.body.pagination).toBeDefined();
     });
@@ -421,6 +467,7 @@ describe('Student Controller', () => {
 ## 🚀 Deployment
 
 ### Production Build
+
 ```bash
 # Install production dependencies
 npm ci --only=production
@@ -430,6 +477,7 @@ NODE_ENV=production npm start
 ```
 
 ### Docker Deployment
+
 ```dockerfile
 FROM node:18-alpine
 WORKDIR /app
@@ -441,6 +489,7 @@ CMD ["npm", "start"]
 ```
 
 ### Environment Setup
+
 - Set up PostgreSQL database
 - Configure environment variables
 - Set up SSL certificates for HTTPS
@@ -450,17 +499,21 @@ CMD ["npm", "start"]
 ## 🐛 Known Issues & Solutions
 
 ### Issue 1: Student CRUD Operations Incomplete
+
 **Problem**: Some CRUD operations for students are missing or incomplete.
 **Location**: `/src/modules/students/students-controller.js`
-**Solution**: 
+**Solution**:
+
 - Implement missing endpoints (CREATE, UPDATE, DELETE)
 - Add proper validation and error handling
 - Test all operations thoroughly
 
 ### Issue 2: Notice Description Not Saving
+
 **Problem**: Notice description field not being saved properly.
 **Location**: `/src/modules/notices/notices-service.js`
-**Solution**: 
+**Solution**:
+
 - Check database query parameters
 - Verify request body parsing
 - Add proper validation for description field
@@ -468,17 +521,20 @@ CMD ["npm", "start"]
 ## 📊 Performance Considerations
 
 ### Database Optimization
+
 - Use connection pooling
 - Implement proper indexing
 - Use prepared statements
 - Optimize complex queries
 
 ### Caching Strategy
+
 - Implement Redis for session storage
 - Cache frequently accessed data
 - Use ETags for conditional requests
 
 ### Security Best Practices
+
 - Regular security audits
 - Keep dependencies updated
 - Implement rate limiting
@@ -486,13 +542,13 @@ CMD ["npm", "start"]
 
 ## 📄 Scripts Reference
 
-| Script | Description |
-|--------|-------------|
-| `npm start` | Start production server |
-| `npm run dev` | Start development server with nodemon |
-| `npm test` | Run test suite |
-| `npm run lint` | Run ESLint |
-| `npm run format` | Format code with Prettier |
+| Script           | Description                           |
+| ---------------- | ------------------------------------- |
+| `npm start`      | Start production server               |
+| `npm run dev`    | Start development server with nodemon |
+| `npm test`       | Run test suite                        |
+| `npm run lint`   | Run ESLint                            |
+| `npm run format` | Format code with Prettier             |
 
 ---
 

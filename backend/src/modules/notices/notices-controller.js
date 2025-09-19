@@ -1,4 +1,4 @@
-const asyncHandler = require("express-async-handler");
+const asyncHandler = require('express-async-handler');
 const {
   fetchNoticeRecipients,
   fetchAllNotices,
@@ -11,8 +11,8 @@ const {
   processGetNoticeRecipients,
   processDeleteNoticeRecipient,
   processGetNoticeRecipient,
-  processGetAllPendingNotices,
-} = require("./notices-service");
+  processGetAllPendingNotices
+} = require('./notices-service');
 
 const handleFetchNoticeRecipients = asyncHandler(async (req, res) => {
   const noticeRecipients = await fetchNoticeRecipients();
@@ -101,5 +101,5 @@ module.exports = {
   handleUpdateNoticeRecipient,
   handleDeleteNoticeRecipient,
   handleGetNoticeRecipient,
-  handleFetchAllPendingNotices,
+  handleFetchAllPendingNotices
 };

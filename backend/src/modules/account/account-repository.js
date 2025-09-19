@@ -1,31 +1,31 @@
-const { processDBRequest } = require("../../utils");
+const { processDBRequest } = require('../../utils');
 
 const changePassword = async (payload, client) => {
-    const { userId, hashedPassword } = payload;
-    const query = `
+  const { userId, hashedPassword } = payload;
+  const query = `
         UPDATE users
         SET password = $1
         WHERE id = $2
     `;
-    const queryParams = [hashedPassword, userId];
-    await client.query(query, queryParams);
-}
+  const queryParams = [hashedPassword, userId];
+  await client.query(query, queryParams);
+};
 
 const getUserRoleNameByUserId = async (id, client) => {
-    const query = `
+  const query = `
         SELECT lower(t1.name) AS name
         FROM roles t1
         JOIN users t2 ON t1.id = t2.role_id
         WHERE t2.id = $1
     `;
-    const queryParams = [id];
-    const { rows } = await client.query(query, queryParams);
-    return rows[0].name;
-}
+  const queryParams = [id];
+  const { rows } = await client.query(query, queryParams);
+  return rows[0].name;
+};
 
 const getStudentAccountDetail = async (userId) => {
-    const studentRoleId = 3;
-    const query = `
+  const studentRoleId = 3;
+  const query = `
         SELECT
             t1.id,
             t1.name,
@@ -53,13 +53,13 @@ const getStudentAccountDetail = async (userId) => {
         LEFT JOIN users t3 ON t1.reporter_id = t3.id
         WHERE t1.id = $1 AND t1.role_id = $2
     `;
-    const queryParams = [userId, studentRoleId];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0];
-}
+  const queryParams = [userId, studentRoleId];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0];
+};
 
 const getStaffAccountDetail = async (userId, userRoleId) => {
-    const query = `
+  const query = `
         SELECT
             t1.id,
             t1.name,
@@ -85,14 +85,14 @@ const getStaffAccountDetail = async (userId, userRoleId) => {
         LEFT JOIN roles t4 ON t1.role_id = t4.id
         WHERE t1.id = $1 AND t1.role_id = $2
     `;
-    const queryParams = [userId, userRoleId];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0];
-}
+  const queryParams = [userId, userRoleId];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0];
+};
 
 module.exports = {
-    changePassword,
-    getUserRoleNameByUserId,
-    getStudentAccountDetail,
-    getStaffAccountDetail
+  changePassword,
+  getUserRoleNameByUserId,
+  getStudentAccountDetail,
+  getStaffAccountDetail
 };

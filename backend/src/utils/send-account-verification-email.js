@@ -1,7 +1,7 @@
-const { env } = require("../config");
-const { generateToken } = require("./jwt-handle");
-const { sendMail } = require("./send-email");
-const { emailVerificationTemplate } = require("../templates");
+const { env } = require('../config');
+const { generateToken } = require('./jwt-handle');
+const { sendMail } = require('./send-email');
+const { emailVerificationTemplate } = require('../templates');
 
 const sendAccountVerificationEmail = async ({ userId, userEmail }) => {
   const pwdToken = generateToken(
@@ -13,8 +13,8 @@ const sendAccountVerificationEmail = async ({ userId, userEmail }) => {
   const mailOptions = {
     from: env.MAIL_FROM_USER,
     to: userEmail,
-    subject: "Verify account",
-    html: emailVerificationTemplate(link),
+    subject: 'Verify account',
+    html: emailVerificationTemplate(link)
   };
   await sendMail(mailOptions);
 };

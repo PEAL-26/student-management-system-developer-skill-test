@@ -1,0 +1,11 @@
+**/dist
+**/logs
+**/node_modules/
+**/postgres_data
+.git
+npm-debug.log
+.coverage
+.coverage.*
+.env
+.aws
+.idea

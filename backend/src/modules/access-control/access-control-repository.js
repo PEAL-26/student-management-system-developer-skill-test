@@ -1,4 +1,4 @@
-const { processDBRequest } = require("../../utils");
+const { processDBRequest } = require('../../utils');
 
 const addAccessControl = async (payload) => {
   const { name, path, type, method, hierarchy_id, id } = payload;
@@ -65,5 +65,5 @@ module.exports = {
   updateAccessControl,
   deleteAccessControl,
   getAllAccessControls,
-  getMyAccessControl,
+  getMyAccessControl
 };

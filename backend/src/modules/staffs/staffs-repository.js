@@ -1,8 +1,8 @@
-const { processDBRequest } = require("../../utils");
+const { processDBRequest } = require('../../utils');
 
 const getAllStaffs = async (payload) => {
-    const { userId, roleId, name } = payload;
-    let query = `
+  const { userId, roleId, name } = payload;
+  let query = `
         SELECT
             t1.id,
             t1.name,
@@ -15,28 +15,28 @@ const getAllStaffs = async (payload) => {
         LEFT JOIN roles t3 ON t1.role_id = t3.id
         WHERE 1=1 AND t1.role_id != 3
     `;
-    let queryParams = [];
-    if (userId) {
-        query += ` AND t1.id = $${queryParams.length + 1}`;
-        queryParams.push(userId);
-    }
-    if (roleId) {
-        query += ` AND t1.role_id = $${queryParams.length + 1}`;
-        queryParams.push(roleId);
-    }
-    if (name) {
-        query += ` AND t1.name = $${queryParams.length + 1}`;
-        queryParams.push(name);
-    }
+  let queryParams = [];
+  if (userId) {
+    query += ` AND t1.id = $${queryParams.length + 1}`;
+    queryParams.push(userId);
+  }
+  if (roleId) {
+    query += ` AND t1.role_id = $${queryParams.length + 1}`;
+    queryParams.push(roleId);
+  }
+  if (name) {
+    query += ` AND t1.name = $${queryParams.length + 1}`;
+    queryParams.push(name);
+  }
 
-    query += ` ORDER  by t1.id`;
+  query += ` ORDER  by t1.id`;
 
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows;
-}
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows;
+};
 
 const getStaffDetailById = async (id) => {
-    const query = `
+  const query = `
         SELECT
             t1.id,
             t1.name,
@@ -64,22 +64,22 @@ const getStaffDetailById = async (id) => {
         LEFT JOIN roles t4 ON t1.role_id = t4.id
         WHERE t1.id = $1
     `;
-    const queryParams = [id];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0];
-}
+  const queryParams = [id];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0];
+};
 
 const addOrUpdateStaff = async (payload) => {
-    const query = `SELECT * FROM staff_add_update($1)`;
-    const queryParams = [payload];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0];
+  const query = `SELECT * FROM staff_add_update($1)`;
+  const queryParams = [payload];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0];
 };
 
 const reviewStaffStatus = async (payload) => {
-    const now = new Date();
-    const { status, userId, reviewerId } = payload;
-    const query = `
+  const now = new Date();
+  const { status, userId, reviewerId } = payload;
+  const query = `
         UPDATE users
         SET
             is_active = $1,
@@ -88,14 +88,14 @@ const reviewStaffStatus = async (payload) => {
         WHERE id = $2
         AND is_email_verified = true
     `;
-    const queryParams = [status, userId, now, reviewerId];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount;
-}
+  const queryParams = [status, userId, now, reviewerId];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount;
+};
 
 module.exports = {
-    getAllStaffs,
-    getStaffDetailById,
-    addOrUpdateStaff,
-    reviewStaffStatus,
+  getAllStaffs,
+  getStaffDetailById,
+  addOrUpdateStaff,
+  reviewStaffStatus
 };
