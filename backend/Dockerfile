@@ -10,11 +10,12 @@ WORKDIR /home/node/backend
 
 COPY backend .
 
+RUN npm install
+
 RUN chown -R node:node /home/node/backend
 
 USER node
 
-RUN npm ci
 
 EXPOSE 5007
 

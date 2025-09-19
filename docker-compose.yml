@@ -8,8 +8,6 @@ services:
     image: school_mgmt/frontend:1.0.0
     ports:
       - "5173:5173"
-    volumes:
-      - .:/home/node/frontend
     networks:
       - school_mgmt_network
     environment:
@@ -26,8 +24,6 @@ services:
     image: school_mgmt/backend:1.0.0
     ports:
       - "5007:5007"
-    volumes:
-      - .:/home/node/backend
     networks:
       - school_mgmt_network
     environment:

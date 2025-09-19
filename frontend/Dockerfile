@@ -10,11 +10,11 @@ WORKDIR /home/node/frontend
 
 COPY frontend .
 
+RUN npm install
+
 RUN chown -R node:node /home/node/frontend
 
 USER node
-
-RUN npm ci
 
 RUN npm run build
 
