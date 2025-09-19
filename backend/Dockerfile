@@ -8,7 +8,7 @@ RUN apk upgrade --update-cache --available && \
 
 WORKDIR /home/node/backend
 
-COPY . .
+COPY backend .
 
 RUN chown -R node:node /home/node/backend
 

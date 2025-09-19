@@ -3,12 +3,12 @@ FROM node:20-alpine
 LABEL maintainer="peal26"
 
 RUN apk upgrade --update-cache --available && \
-    apk add --no-cache openssl && \
+    apk add openssl && \
     rm -rf /var/cache/apk/*
 
 WORKDIR /home/node/frontend
 
-COPY . .
+COPY frontend .
 
 RUN chown -R node:node /home/node/frontend
 
