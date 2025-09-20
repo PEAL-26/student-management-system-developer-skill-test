@@ -51,7 +51,7 @@ services:
     image: postgres:13.22-alpine3.22
     environment:
       - POSTGRES_USER=${DB_USER}
-      - POSTGRES_DB={DB_NAME}
+      - POSTGRES_DB=${DB_NAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - "5432:5432"
